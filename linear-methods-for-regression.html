@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Linear Methods for Regression | Notes on ML</title>
+  <meta name="description" content="Chapter 2 Linear Methods for Regression | Notes on ML" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Linear Methods for Regression | Notes on ML" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Linear Methods for Regression | Notes on ML" />
+  
+  
+  
+
+<meta name="author" content="brightertiger" />
+
+
+<meta name="date" content="2022-04-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About</a></li>
+<li class="chapter" data-level="2" data-path="linear-methods-for-regression.html"><a href="linear-methods-for-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Methods for Regression</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Notes on ML</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="linear-methods-for-regression" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Linear Methods for Regression</h1>
+<ul>
+<li><span class="math inline">\(y = X\beta + \epsilon\)</span>
+<ul>
+<li><span class="math inline">\(\epsilon \sim N(0, \sigma^2)\)</span></li>
+</ul></li>
+<li>Linear Function Approximation
+<ul>
+<li><span class="math inline">\(E(Y|X) = f(X) = \beta_0 + \sum \beta_j x_j\)</span></li>
+<li>Model is linear in parameters</li>
+</ul></li>
+<li>Minimize Residual Sum of Squares
+<ul>
+<li><span class="math inline">\(RSS = \sum (y_i - f(x_i))^2 = (y - X\beta)^T(y - X\beta)\)</span></li>
+</ul></li>
+<li>Optimal value of beta:
+<ul>
+<li><span class="math inline">\({\delta RSS \over \delta \beta} = 0\)</span></li>
+<li><span class="math inline">\(\hat \beta = (X^T X)^{-1}(X^Ty)\)</span></li>
+<li><span class="math inline">\(\hat y = X \hat \beta = (X(X^T X)^{-1}X^T)y = H y\)</span>
+<ul>
+<li>H is the projection or Hat matrix</li>
+</ul></li>
+</ul></li>
+<li>Sampling Distribution of <span class="math inline">\(\beta\)</span>
+<ul>
+<li>Deviations around the conditional mean are Gaussian</li>
+<li><span class="math inline">\(Var(\hat \beta) = (X^T X)^{-1} \sigma^2\)</span></li>
+<li>Estimate of Sigma can be done by looking at sample variance</li>
+<li><span class="math inline">\(\hat \sigma^2 = {1 \over N-p} \sum (y_i - \hat y_i)^2\)</span></li>
+<li><span class="math inline">\(\hat \beta \sim N(\beta, (X^T X)^{-1} \sigma^2)\)</span></li>
+</ul></li>
+<li>Statistical Significance
+<ul>
+<li><span class="math inline">\(Z_i = {\beta_i \over SE_i} = \frac{\beta_i}{\hat \sigma \sqrt v_i}\)</span>
+<ul>
+<li>v is the diagnoal element of <span class="math inline">\((X^T X)^{-1}\)</span></li>
+</ul></li>
+<li>Testing significance for a group of parameters
+<ul>
+<li>Say categorical variables with all k variables</li>
+<li><span class="math inline">\(F = (RSS_0 - RSS_1) / (RSS_1 / N - p)\)</span></li>
+<li>Change is RSS of the bigger model normalized by the estimate of variance</li>
+</ul></li>
+</ul></li>
+<li>Gauss-Markov Theorem
+<ul>
+<li>Among all the unbiased estimators, the least square estimates have lowest variance</li>
+<li><span class="math inline">\(E(Y_0 - \hat Y_0))^2 = \sigma^2 + MSE(\hat f(X_0))\)</span></li>
+</ul></li>
+<li>Subset Selection
+<ul>
+<li>Select only a few variables for better interpretability</li>
+<li>Best subset selection os size K is the one that yields minimum RSS</li>
+<li>Forward Selection
+<ul>
+<li>Sequentially add one variable that most improves the fit</li>
+<li>QR decomposition / successive orthogonalization to look at correlation</li>
+</ul></li>
+<li>Backward Selection
+<ul>
+<li>Sequentially delete the variable that has least impact on the fit</li>
+<li>Z Score</li>
+</ul></li>
+<li>Hybrid Stepwise Selection
+<ul>
+<li>Consider both forward and backward moves at each step</li>
+<li>AIC for weighting the choices</li>
+</ul></li>
+<li>Forward Stagewise Selection
+<ul>
+<li>Add the variable most correlated with current residual</li>
+<li>Don’t re-adjust the coefficients of the existing variables</li>
+</ul></li>
+</ul></li>
+<li>Shrinkage Methods
+<ul>
+<li>Shinkage methods result in biased estimators but a large reduction in variance</li>
+<li>More continuous and dont suffer from high variability</li>
+<li>Ridge Regression
+<ul>
+<li>Impose a penalty the size of the coefficicents</li>
+<li><span class="math inline">\(\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) + \lambda \sum \beta^2\)</span></li>
+<li><span class="math inline">\(\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) \; \text{subject to} \sum \beta^2 \le t\)</span></li>
+<li>t is the budget</li>
+<li>In case of correlated variables, coefficcients are poorly determined</li>
+<li>A large positive coefficient of a variable is canceled by a large negative coefficient of the correlated variable</li>
+<li>Solution not invariant to scaling. Standardize the inputs and don’t impose penalty on intercept</li>
+<li><span class="math inline">\(\hat \beta^{\text{ridge}} = (X^T X + \lambda I)^{-1}(X^Ty)\)</span></li>
+<li>In case of correlated predictors, the original <span class="math inline">\((X^T X)\)</span> wasn’t full rank. But by adding noise to diagonal elements, the matrix can now be inverted.</li>
+<li>In case of orthonormal inputs (PCA), the ridge coefficicents are scaled versions of the original least-square estimates.</li>
+<li><span class="math inline">\(\lambda\)</span> controls the degrees of freedom. A large value results in effectively dropping the variables.</li>
+</ul></li>
+<li>Lasso Regression
+<ul>
+<li><span class="math inline">\(\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) + \lambda \sum |\beta|\)</span></li>
+<li>Non-linear optimization</li>
+<li>A heavy restriction on budget makes some coefficients exactly zero</li>
+<li>Continuous subset selection</li>
+</ul></li>
+<li>Comparison between Ridge and Laso
+<ul>
+<li>Ridge represents a disk <span class="math inline">\(\beta_1^2 + \beta_2^2 &lt;= t\)</span></li>
+<li>Lasso represents a rhombus <span class="math inline">\(|\beta_1| + |\beta_2| &lt;= t\)</span></li>
+<li>At optimal value, the estimated parameters can be exactly zero (corner solutions)</li>
+<li>Bayesian MAP estimates with different priors
+<ul>
+<li>Lasso has Laplace Prior</li>
+<li>Ridge has Gaussian Prior</li>
+</ul></li>
+</ul></li>
+<li>Elastic Net
+<ul>
+<li><span class="math inline">\(\lambda \sum \alpha \beta^2 + (1 - \alpha) |\beta|\)</span></li>
+<li>Variable selection like Lasso</li>
+<li>Shinking coefficients like Ridge</li>
+</ul></li>
+</ul></li>
+<li>Partial Least Squares
+<ul>
+<li>Alternative approach to PCA deal with correlated features</li>
+<li>Supervised transformation</li>
+<li>Principal component regression seeks directions that have high variance</li>
+<li>Partial Least Square seeks direction with high variance and high correlation with response</li>
+<li>Derive new features by linear combination of raw variables re-weighted by the correlation</li>
+</ul></li>
+</ul>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/01-regression.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
