@@ -1,34 +1,39 @@
 # Linear Methods for Regression
 
-- $y = X\beta + \epsilon$
-    - $\epsilon \sim N(0, \sigma^2)$ 
-- Linear Function Approximation
-    - $E(Y|X) = f(X) = \beta_0 + \sum \beta_j x_j$
-    - Model is linear in parameters
-- Minimize Residual Sum of Squares
-    - $RSS = \sum (y_i - f(x_i))^2 = (y - X\beta)^T(y - X\beta)$
-- Optimal value of beta:
-    - ${\delta RSS \over \delta \beta} = 0$ 
-    - $\hat \beta = (X^T X)^{-1}(X^Ty)$
-    - $\hat y = X \hat \beta = (X(X^T X)^{-1}X^T)y = H y$
-        - H is the projection or Hat matrix
-- Sampling Distribution of $\beta$
+### Derivation
+  - $y = X\beta + \epsilon$
+      - $\epsilon \sim N(0, \sigma^2)$ 
+  - Linear Function Approximation
+      - $E(Y|X) = f(X) = \beta_0 + \sum \beta_j x_j$
+      - Model is linear in parameters
+  - Minimize Residual Sum of Squares
+      - $RSS = \sum (y_i - f(x_i))^2 = (y - X\beta)^T(y - X\beta)$
+  - Optimal value of beta:
+      - ${\delta RSS \over \delta \beta} = 0$ 
+      - $\hat \beta = (X^T X)^{-1}(X^Ty)$
+      - $\hat y = X \hat \beta = (X(X^T X)^{-1}X^T)y = H y$
+          - H is the projection or Hat matrix
+
+### Sampling Distribution of $\beta$
     - Deviations around the conditional mean are Gaussian
     - $Var(\hat \beta) = (X^T X)^{-1} \sigma^2$
     - Estimate of Sigma can be done by looking at sample variance
     - $\hat \sigma^2 = {1 \over N-p} \sum (y_i - \hat y_i)^2$
     - $\hat \beta \sim N(\beta, (X^T X)^{-1} \sigma^2)$ 
-- Statistical Significance
+
+### Statistical Significance
     - $Z_i = {\beta_i \over SE_i} = \frac{\beta_i}{\hat \sigma \sqrt v_i}$
         - v is the diagnoal element of $(X^T X)^{-1}$
     - Testing significance for a group of parameters
         - Say categorical variables with all k variables
         - $F = (RSS_0 - RSS_1) / (RSS_1 / N - p)$
         - Change is RSS of the bigger model normalized by the estimate of variance
-- Gauss-Markov Theorem
+
+### Gauss-Markov Theorem
     - Among all the unbiased estimators, the least square estimates have lowest variance
     - $E(Y_0 - \hat Y_0))^2 = \sigma^2 + MSE(\hat f(X_0))$
-- Subset Selection
+
+### Subset Selection
     - Select only a few variables for better interpretability
     - Best subset selection os size K is the one that yields minimum RSS
     - Forward Selection
@@ -43,7 +48,8 @@
     - Forward Stagewise Selection
         - Add the variable most correlated with current residual
         - Don't re-adjust the coefficients of the existing variables
-- Shrinkage Methods
+
+### Shrinkage Methods
     - Shinkage methods result in biased estimators but a large reduction in variance 
     - More continuous and dont suffer from high variability
     - Ridge Regression
@@ -74,7 +80,8 @@
         - $\lambda \sum \alpha \beta^2 + (1 - \alpha) |\beta|$
         - Variable selection like Lasso
         - Shinking coefficients like Ridge
-- Partial Least Squares
+
+### Partial Least Squares
     - Alternative approach to PCA deal with correlated features 
     - Supervised transformation
     - Principal component regression seeks directions that have high variance

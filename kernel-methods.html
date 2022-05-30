@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Linear Methods for Regression | ESLR Notes</title>
-  <meta name="description" content="2 Linear Methods for Regression | ESLR Notes" />
+  <title>4 Kernel Methods | ESLR Notes</title>
+  <meta name="description" content="4 Kernel Methods | ESLR Notes" />
   <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Linear Methods for Regression | ESLR Notes" />
+  <meta property="og:title" content="4 Kernel Methods | ESLR Notes" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Linear Methods for Regression | ESLR Notes" />
+  <meta name="twitter:title" content="4 Kernel Methods | ESLR Notes" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="linear-methods-for-classification.html"/>
+<link rel="prev" href="linear-methods-for-classification.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -113,114 +113,106 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="linear-methods-for-regression" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">2</span> Linear Methods for Regression<a href="linear-methods-for-regression.html#linear-methods-for-regression" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="derivation" class="section level3 hasAnchor" number="2.0.1">
-<h3><span class="header-section-number">2.0.1</span> Derivation<a href="linear-methods-for-regression.html#derivation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="kernel-methods" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Kernel Methods<a href="kernel-methods.html#kernel-methods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="kernel-density-estimation" class="section level3 hasAnchor" number="4.0.1">
+<h3><span class="header-section-number">4.0.1</span> Kernel Density Estimation<a href="kernel-methods.html#kernel-density-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(y = X\beta + \epsilon\)</span>
+<li>A random sample <span class="math inline">\([x_0, x_1, ... x_n]\)</span> is drawn from probability distribution <span class="math inline">\(f_X(x)\)</span></li>
+<li>Parzen Estimate of <span class="math inline">\(\hat f_X(x)\)</span>
 <ul>
-<li><span class="math inline">\(\epsilon \sim N(0, \sigma^2)\)</span></li>
+<li><span class="math inline">\(\hat f_X(x_0) = {1 \over N \lambda} \,\, \# x_i \in N(x_0)\)</span></li>
+<li><span class="math inline">\(\lambda\)</span> is width of the neighbourhood</li>
+<li>The esitmate is bumpy</li>
 </ul></li>
-<li>Linear Function Approximation
+<li>Gaussian Kernel of width <span class="math inline">\(\lambda\)</span> can be a choice of Kernel
 <ul>
-<li><span class="math inline">\(E(Y|X) = f(X) = \beta_0 + \sum \beta_j x_j\)</span></li>
-<li>Model is linear in parameters</li>
+<li><span class="math inline">\(\hat f_X(x_0) = {1 \over N \lambda} K_{\lambda}(x_i, x_0)\)</span></li>
+<li><span class="math inline">\(K_{\lambda}(x_i, x_0) = \phi(\|x_i - x_0\|) / \lambda\)</span></li>
+<li>Weight of point <span class="math inline">\(x_i\)</span> descreases as distance from <span class="math inline">\(x_0\)</span> increases</li>
 </ul></li>
-<li>Minimize Residual Sum of Squares
+<li>New estimate for density is
 <ul>
-<li><span class="math inline">\(RSS = \sum (y_i - f(x_i))^2 = (y - X\beta)^T(y - X\beta)\)</span></li>
+<li><span class="math inline">\(\hat f_X(x_0) = {1 \over N } \phi_{\lambda}(x_ - x_0)\)</span></li>
+<li>Convolution of Sample empirical distribution with Gaussian Kernel</li>
 </ul></li>
-<li>Optimal value of beta:
+</ul>
+</div>
+<div id="kernel-desnity-classification" class="section level3 hasAnchor" number="4.0.2">
+<h3><span class="header-section-number">4.0.2</span> Kernel Desnity Classification<a href="kernel-methods.html#kernel-desnity-classification" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\({\delta RSS \over \delta \beta} = 0\)</span></li>
-<li><span class="math inline">\(\hat \beta = (X^T X)^{-1}(X^Ty)\)</span></li>
-<li><span class="math inline">\(\hat y = X \hat \beta = (X(X^T X)^{-1}X^T)y = H y\)</span>
+<li>Bayes’ Theorem</li>
+<li><span class="math inline">\(P(G=j | X=x_0) \propto \hat \pi_j \hat f_j(x_0)\)</span></li>
+<li><span class="math inline">\(\hat \pi_j\)</span> is the sample proportion of the class j</li>
+<li><span class="math inline">\(\hat f_j(x_0)\)</span> is the Kernel density estimate for class j</li>
+<li>Learning separate class densities may be misleading
 <ul>
-<li>H is the projection or Hat matrix</li>
+<li>Dense vs Non-dense regions in feature space</li>
+<li>Density estimates are critical only near the decision boundary</li>
+</ul></li>
+</ul>
+</div>
+<div id="naive-bayes-classifier" class="section level3 hasAnchor" number="4.0.3">
+<h3><span class="header-section-number">4.0.3</span> Naive Bayes Classifier<a href="kernel-methods.html#naive-bayes-classifier" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Applicable when dimension of feature space is high</li>
+<li>Assumption: For a given class, the features are independent
+<ul>
+<li><span class="math inline">\(f_j(x) = \prod_p f_{jp}(x_p)\)</span></li>
+<li>Rarely holds true in real world dataset</li>
+</ul></li>
+<li><span class="math inline">\(\log \frac{P(G=i|X=X)}{P(G=j|X=X)} = \log \frac{\pi_i \prod f_{ip}(x_p)}{\pi_j \prod f_{jp}(x_p)}\)</span>
+<ul>
+<li><span class="math inline">\(\log \frac{\pi_i}{\pi_j} + \sum \log \frac{f_{ip}(x_p)}{f_{jp}(x_p)}\)</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="radial-basis-functions" class="section level3 hasAnchor" number="4.0.4">
+<h3><span class="header-section-number">4.0.4</span> Radial Basis Functions<a href="kernel-methods.html#radial-basis-functions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Basis Functions <span class="math inline">\(f(x) = \sum \beta h(x)\)</span></li>
+<li>Transform lower dimension features to high dimensions</li>
+<li>Data which is not linearly separable in lower dimension may become linearly separable in higher dimensions</li>
+<li>RBF treats gaussian kernel functions as basis functions
+<ul>
+<li>Taylor series expansion of <span class="math inline">\(\exp(x)\)</span></li>
+<li>Polynomial basis function with infinite dimensions</li>
+</ul></li>
+<li><span class="math inline">\(f(x) = \sum_j K_{\lambda_j}(\xi_j, x) \beta_j\)</span></li>
+<li><span class="math inline">\(f(x) = \sum_j D({\|x_i - \xi_j\| \over \lambda _j}) \beta_j\)</span>
+<ul>
+<li>D is the standard normal gaussian density function</li>
+</ul></li>
+<li>For least square regression, SSE can be optimized wrt to <span class="math inline">\(\beta, \xi, \lambda\)</span>
+<ul>
+<li>Non-Linear Optimization</li>
+<li>Use greedy approaches like SGD</li>
+</ul></li>
+<li>Simplify the calculations by assuming <span class="math inline">\(\xi, \lambda\)</span> to be hyperparameters
+<ul>
+<li>Use unsupervised learning to estimate them</li>
+<li>Assuming constant variance simplifies calculations
+<ul>
+<li>It can create “holes” where none of the kernels have high density estimate</li>
 </ul></li>
 </ul></li>
 </ul>
 </div>
-<div id="sampling-distribution-of-beta" class="section level3 hasAnchor" number="2.0.2">
-<h3><span class="header-section-number">2.0.2</span> Sampling Distribution of <span class="math inline">\(\beta\)</span><a href="linear-methods-for-regression.html#sampling-distribution-of-beta" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<pre><code>- Deviations around the conditional mean are Gaussian
-- $Var(\hat \beta) = (X^T X)^{-1} \sigma^2$
-- Estimate of Sigma can be done by looking at sample variance
-- $\hat \sigma^2 = {1 \over N-p} \sum (y_i - \hat y_i)^2$
-- $\hat \beta \sim N(\beta, (X^T X)^{-1} \sigma^2)$ </code></pre>
-</div>
-<div id="statistical-significance" class="section level3 hasAnchor" number="2.0.3">
-<h3><span class="header-section-number">2.0.3</span> Statistical Significance<a href="linear-methods-for-regression.html#statistical-significance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<pre><code>- $Z_i = {\beta_i \over SE_i} = \frac{\beta_i}{\hat \sigma \sqrt v_i}$
-    - v is the diagnoal element of $(X^T X)^{-1}$
-- Testing significance for a group of parameters
-    - Say categorical variables with all k variables
-    - $F = (RSS_0 - RSS_1) / (RSS_1 / N - p)$
-    - Change is RSS of the bigger model normalized by the estimate of variance</code></pre>
-</div>
-<div id="gauss-markov-theorem" class="section level3 hasAnchor" number="2.0.4">
-<h3><span class="header-section-number">2.0.4</span> Gauss-Markov Theorem<a href="linear-methods-for-regression.html#gauss-markov-theorem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<pre><code>- Among all the unbiased estimators, the least square estimates have lowest variance
-- $E(Y_0 - \hat Y_0))^2 = \sigma^2 + MSE(\hat f(X_0))$</code></pre>
-</div>
-<div id="subset-selection" class="section level3 hasAnchor" number="2.0.5">
-<h3><span class="header-section-number">2.0.5</span> Subset Selection<a href="linear-methods-for-regression.html#subset-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<pre><code>- Select only a few variables for better interpretability
-- Best subset selection os size K is the one that yields minimum RSS
-- Forward Selection
-    - Sequentially add one variable that most improves the fit
-    - QR decomposition / successive orthogonalization to look at correlation
-- Backward Selection
-    - Sequentially delete the variable that has least impact on the fit
-    - Z Score
-- Hybrid Stepwise Selection
-    - Consider both forward and backward moves at each step
-    - AIC for weighting the choices
-- Forward Stagewise Selection
-    - Add the variable most correlated with current residual
-    - Don&#39;t re-adjust the coefficients of the existing variables</code></pre>
-</div>
-<div id="shrinkage-methods" class="section level3 hasAnchor" number="2.0.6">
-<h3><span class="header-section-number">2.0.6</span> Shrinkage Methods<a href="linear-methods-for-regression.html#shrinkage-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<pre><code>- Shinkage methods result in biased estimators but a large reduction in variance 
-- More continuous and dont suffer from high variability
-- Ridge Regression
-    - Impose a penalty the size of the coefficicents
-    - $\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) + \lambda \sum \beta^2$
-    - $\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) \; \text{subject to} \sum \beta^2 \le t$
-    - t is the budget
-    - In case of correlated variables, coefficcients are poorly determined
-    - A large positive coefficient of a variable is canceled by a large negative coefficient of the correlated variable
-    - Solution not invariant to scaling. Standardize the inputs and don&#39;t impose penalty on intercept
-    - $\hat \beta^{\text{ridge}} = (X^T X + \lambda I)^{-1}(X^Ty)$
-    - In case of correlated predictors, the original $(X^T X)$ wasn&#39;t full rank. But by adding noise to diagonal elements, the matrix can now be inverted.
-    - In case of orthonormal inputs (PCA), the ridge coefficicents are scaled versions of the original least-square estimates.
-    - $\lambda$ controls the degrees of freedom. A large value results in effectively dropping the variables.
-- Lasso Regression
-    - $\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) + \lambda \sum |\beta|$
-    - Non-linear optimization
-    - A heavy restriction on budget makes some coefficients exactly zero
-    - Continuous subset selection
-- Comparison between Ridge and Laso
-    - Ridge represents a disk $\beta_1^2 + \beta_2^2 &lt;= t$ 
-    - Lasso represents a rhombus $|\beta_1| + |\beta_2| &lt;= t$ 
-    - At optimal value, the estimated parameters can be exactly zero (corner solutions)
-    - Bayesian MAP estimates with different priors
-        - Lasso has Laplace Prior
-        - Ridge has Gaussian Prior
-- Elastic Net
-    - $\lambda \sum \alpha \beta^2 + (1 - \alpha) |\beta|$
-    - Variable selection like Lasso
-    - Shinking coefficients like Ridge</code></pre>
-</div>
-<div id="partial-least-squares" class="section level3 hasAnchor" number="2.0.7">
-<h3><span class="header-section-number">2.0.7</span> Partial Least Squares<a href="linear-methods-for-regression.html#partial-least-squares" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<pre><code>- Alternative approach to PCA deal with correlated features 
-- Supervised transformation
-- Principal component regression seeks directions that have high variance
-- Partial Least Square seeks direction with high variance and high correlation with response
-- Derive new features by linear combination of raw variables re-weighted by the correlation</code></pre>
+<div id="mixture-models" class="section level3 hasAnchor" number="4.0.5">
+<h3><span class="header-section-number">4.0.5</span> Mixture Models<a href="kernel-methods.html#mixture-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Extension of RBF</li>
+<li><span class="math inline">\(f(x) = \sum_j \alpha_j \phi(x, \mu_j, \Sigma_j)\)</span></li>
+<li><span class="math inline">\(\sum \alpha_j = 1\)</span>, are the mixing proporitons</li>
+<li>Gaussian mixture models use Gaussian kernel in place of <span class="math inline">\(\phi\)</span></li>
+<li>Parameters are fit using Maximum Likelihood</li>
+<li>If the covariance martix is restricted to a diagonal matrix <span class="math inline">\(\Sigma = \sigma^2 I\)</span>, then it reduces to radial basis expansion</li>
+<li>Classification can be done via Bayes Theorem
+<ul>
+<li>Separate density estimation for each class</li>
+<li>Probability is <span class="math inline">\(\propto \hat \pi_i f_j(x)\)</span></li>
+</ul></li>
+</ul>
 
 </div>
 </div>
@@ -229,8 +221,8 @@
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="linear-methods-for-classification.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="linear-methods-for-classification.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
