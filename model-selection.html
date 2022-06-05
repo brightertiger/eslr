@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Linear Methods for Regression | ESLR Notes</title>
-  <meta name="description" content="2 Linear Methods for Regression | ESLR Notes" />
+  <title>5 Model Selection | ESLR Notes</title>
+  <meta name="description" content="5 Model Selection | ESLR Notes" />
   <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Linear Methods for Regression | ESLR Notes" />
+  <meta property="og:title" content="5 Model Selection | ESLR Notes" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Linear Methods for Regression | ESLR Notes" />
+  <meta name="twitter:title" content="5 Model Selection | ESLR Notes" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="linear-methods-for-classification.html"/>
+<link rel="prev" href="kernel-methods.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -123,147 +123,223 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="linear-methods-for-regression" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">2</span> Linear Methods for Regression<a href="linear-methods-for-regression.html#linear-methods-for-regression" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="derivation" class="section level3 hasAnchor" number="2.0.1">
-<h3><span class="header-section-number">2.0.1</span> Derivation<a href="linear-methods-for-regression.html#derivation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="model-selection" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Model Selection<a href="model-selection.html#model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="bias-variance-tradeoff" class="section level3 hasAnchor" number="5.0.1">
+<h3><span class="header-section-number">5.0.1</span> Bias-Variance Tradeoff<a href="model-selection.html#bias-variance-tradeoff" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(y = X\beta + \epsilon\)</span>
+<li>Generalization
 <ul>
-<li><span class="math inline">\(\epsilon \sim N(0, \sigma^2)\)</span></li>
+<li>Prediction error over an independent test sample</li>
 </ul></li>
-<li>Linear Function Approximation
+<li><span class="math inline">\(\text{ERR}_T = E(L(Y, \hat f(x)) | T)\)</span>
 <ul>
-<li><span class="math inline">\(E(Y|X) = f(X) = \beta_0 + \sum \beta_j x_j\)</span></li>
-<li>Model is linear in parameters</li>
+<li>T refers to the training set used to build the model</li>
+<li>L is the loss function used to evaluate the model performance
+<ul>
+<li>Regression: Squared Loss, Absolute Loss</li>
+<li>Classification: 0-1 Loss, Deviance (-2 x LL)</li>
 </ul></li>
-<li>Minimize Residual Sum of Squares
-<ul>
-<li><span class="math inline">\(RSS = \sum (y_i - f(x_i))^2 = (y - X\beta)^T(y - X\beta)\)</span></li>
 </ul></li>
-<li>Optimal value of beta:
+<li>As the model becomes more complex, it adaps to complex underlying structure of the training data
 <ul>
-<li><span class="math inline">\({\delta RSS \over \delta \beta} = 0\)</span></li>
-<li><span class="math inline">\(\hat \beta = (X^T X)^{-1}(X^Ty)\)</span></li>
-<li><span class="math inline">\(\hat y = X \hat \beta = (X(X^T X)^{-1}X^T)y = H y\)</span>
+<li>Decrease in bias but increase in variance</li>
+<li>If the underlying training data changes, the complex fitted model will change to a large extent</li>
+</ul></li>
+<li>Intermediate model complexity that gives minimum expected test error</li>
+<li>Training error is not a good estimate of test error
 <ul>
-<li>H is the projection or Hat matrix</li>
+<li>Consistently decreases with increasing model complexity</li>
+<li>Poor generalization</li>
+</ul></li>
+<li>Model Selection
+<ul>
+<li>Estimating Performance of different models to choose the best one</li>
+</ul></li>
+<li>Model Assessment
+<ul>
+<li>Having selected the model, estimating the generalization error on new, unseen data<br />
+</li>
+</ul></li>
+<li>Divide the dataset
+<ul>
+<li>Training: Fit the models</li>
+<li>Validaiton: Estimate model prediction error for model selection</li>
+<li>Test: Generalizaiton error of the final chosen model</li>
+</ul></li>
+</ul>
+</div>
+<div id="bias-variance-decomposition" class="section level3 hasAnchor" number="5.0.2">
+<h3><span class="header-section-number">5.0.2</span> Bias-Variance Decomposition<a href="model-selection.html#bias-variance-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><span class="math inline">\(Y = f(X) + \epsilon\)</span>
+<ul>
+<li><span class="math inline">\(E(\epsilon) = 0, V(\epsilon) = \sigma^2_{\epsilon}\)</span></li>
+</ul></li>
+<li><span class="math inline">\(\text{ERR}(x_0) = E((Y - \hat f(x_0))^2 | x_0)\)</span>
+<ul>
+<li><span class="math inline">\(\text{ERR}(x_0) = E((f(x_0) + \epsilon - \hat f(x_0))^2)\)</span></li>
+<li><span class="math inline">\(\text{ERR}(x_0) = \sigma^2_{\epsilon} + [E(\hat f(x_0) - f(x_0))]^2 + E[\hat f(x_0) - E(\hat f(x_0)]^2\)</span></li>
+<li>MSE = Irreducible Error + Bias Squared + Variance</li>
+</ul></li>
+<li>Bias: Difference between average of estimate and true mean</li>
+<li>Variance: Squared Deviation of model around its mean</li>
+<li>More Complex Model
+<ul>
+<li>Lower Bias</li>
+<li>Higher Variance</li>
+</ul></li>
+<li>For linear Model
+<ul>
+<li><span class="math inline">\(\text{Variance} \propto p\)</span>
+<ul>
+<li>Complexity of the model is related to the number of parameters</li>
+</ul></li>
+<li><span class="math inline">\(\text{Bias}^2 = \text{Model Bias}^2 + \text{Estimation Bias}^2\)</span>
+<ul>
+<li>Model Bias: Best fitting linar model and True function</li>
+<li>Estimation Bias: Estimated Model and Best fitting linar model</li>
+</ul></li>
+<li>For OLS: Estimation Bias is 0, BLUE</li>
+<li>For Ridge: Estimation Bias is positive
+<ul>
+<li>Trade-off with reduction in variance</li>
 </ul></li>
 </ul></li>
 </ul>
 </div>
-<div id="sampling-distribution-of-beta" class="section level3 hasAnchor" number="2.0.2">
-<h3><span class="header-section-number">2.0.2</span> Sampling Distribution of <span class="math inline">\(\beta\)</span><a href="linear-methods-for-regression.html#sampling-distribution-of-beta" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="optimism-of-training-error" class="section level3 hasAnchor" number="5.0.3">
+<h3><span class="header-section-number">5.0.3</span> Optimism of Training Error<a href="model-selection.html#optimism-of-training-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>Deviations around the conditional mean are Gaussian</li>
-<li><span class="math inline">\(Var(\hat \beta) = (X^T X)^{-1} \sigma^2\)</span></li>
-<li>Estimate of Sigma can be done by looking at sample variance</li>
-<li><span class="math inline">\(\hat \sigma^2 = {1 \over N-p} \sum (y_i - \hat y_i)^2\)</span></li>
-<li><span class="math inline">\(\hat \beta \sim N(\beta, (X^T X)^{-1} \sigma^2)\)</span></li>
+<li><span class="math inline">\(\text{ERR} = E(\text{ERR}_T)\)</span></li>
+<li>Training error is less than test error
+<ul>
+<li>Same data is being used to train and evaluate the model</li>
+</ul></li>
+<li>Optimistic estimate of generalization error
+<ul>
+<li><span class="math inline">\(\text{ERR}_{in}\)</span>:
+<ul>
+<li>Error between sample and populaiton regression function estimates on training data</li>
+</ul></li>
+<li><span class="math inline">\(\bar{\text{err}}\)</span>
+<ul>
+<li>Average sample regression error over training data</li>
+</ul></li>
+</ul></li>
+<li>Optimisim in training error estimate
+<ul>
+<li><span class="math inline">\(\text{op} = \text{ERR}_{in} - \bar{\text{err}}\)</span></li>
+<li>Related to <span class="math inline">\(\text{cov}(y, \hat y)\)</span></li>
+<li>How strongly a label value affects its own prediction</li>
+</ul></li>
+<li>Optimism increases with number of inputs</li>
+<li>Optimism decreases with number of training samples</li>
 </ul>
 </div>
-<div id="statistical-significance" class="section level3 hasAnchor" number="2.0.3">
-<h3><span class="header-section-number">2.0.3</span> Statistical Significance<a href="linear-methods-for-regression.html#statistical-significance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="in-sample-prediciton-error" class="section level3 hasAnchor" number="5.0.4">
+<h3><span class="header-section-number">5.0.4</span> In-sample Prediciton Error<a href="model-selection.html#in-sample-prediciton-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(Z_i = {\beta_i \over SE_i} = \frac{\beta_i}{\hat \sigma \sqrt v_i}\)</span>
+<li><span class="math inline">\(\text{ERR}_{in} = \bar{\text{err}} + \text{op}\)</span></li>
+<li>Cp Statistic
 <ul>
-<li>v is the diagnoal element of <span class="math inline">\((X^T X)^{-1}\)</span></li>
+<li><span class="math inline">\(C_p = \bar{\text{err}} + 2{p \over N} \sigma^2_{\epsilon}\)</span></li>
+<li>p is the effective number of parameters</li>
 </ul></li>
-<li>Testing significance for a group of parameters
+<li>AIC
 <ul>
-<li>Say categorical variables with all k variables</li>
-<li><span class="math inline">\(F = (RSS_0 - RSS_1) / (RSS_1 / N - p)\)</span></li>
-<li>Change is RSS of the bigger model normalized by the estimate of variance</li>
+<li><span class="math inline">\(\text{AIC} = {-2 \over N} LL + 2{p \over N}\)</span></li>
+<li>p is the effective number of parameters</li>
+<li>For model selection, choose the one with lowest AIC</li>
 </ul></li>
-</ul>
-</div>
-<div id="gauss-markov-theorem" class="section level3 hasAnchor" number="2.0.4">
-<h3><span class="header-section-number">2.0.4</span> Gauss-Markov Theorem<a href="linear-methods-for-regression.html#gauss-markov-theorem" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<li>Effective Number of Parameters
 <ul>
-<li>Among all the unbiased estimators, the least square estimates have lowest variance</li>
-<li><span class="math inline">\(E(Y_0 - \hat Y_0))^2 = \sigma^2 + MSE(\hat f(X_0))\)</span></li>
-</ul>
-</div>
-<div id="subset-selection" class="section level3 hasAnchor" number="2.0.5">
-<h3><span class="header-section-number">2.0.5</span> Subset Selection<a href="linear-methods-for-regression.html#subset-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>Select only a few variables for better interpretability</li>
-<li>Best subset selection os size K is the one that yields minimum RSS</li>
-<li>Forward Selection
-<ul>
-<li>Sequentially add one variable that most improves the fit</li>
-<li>QR decomposition / successive orthogonalization to look at correlation</li>
+<li>Linear Regression: <span class="math inline">\(\hat y = ((X&#39;X)^{-1}X&#39;)y\)</span></li>
+<li>Ridge Regression: <span class="math inline">\(\hat y = (((X&#39;X)^{-1} + \lambda I)X&#39;)y\)</span></li>
+<li>Generalized Form: <span class="math inline">\(\hat y = S y\)</span></li>
+<li>p is the trace of the S Matrix</li>
 </ul></li>
-<li>Backward Selection
+<li>BIC
 <ul>
-<li>Sequentially delete the variable that has least impact on the fit</li>
-<li>Z Score</li>
+<li><span class="math inline">\(\text{BIC} = {-2 \over N} LL + \log N \times p\)</span></li>
+<li>Penalizes complex models more heavily compared to AIC</li>
+<li>Bayesian Approach
+<ul>
+<li><span class="math inline">\(P(M |D) \propto P(D |M) P(M)\)</span></li>
 </ul></li>
-<li>Hybrid Stepwise Selection
+<li>Laplace Approximation
 <ul>
-<li>Consider both forward and backward moves at each step</li>
-<li>AIC for weighting the choices</li>
+<li><span class="math inline">\(\log P(D |M) = \log P(D |M, \theta) - p \log N\)</span></li>
+<li><span class="math inline">\(\log P(D |M, \theta)\)</span> is the MLE objective function</li>
 </ul></li>
-<li>Forward Stagewise Selection
+<li>Compare two models
 <ul>
-<li>Add the variable most correlated with current residual</li>
-<li>Don’t re-adjust the coefficients of the existing variables</li>
-</ul></li>
-</ul>
-</div>
-<div id="shrinkage-methods" class="section level3 hasAnchor" number="2.0.6">
-<h3><span class="header-section-number">2.0.6</span> Shrinkage Methods<a href="linear-methods-for-regression.html#shrinkage-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>Shinkage methods result in biased estimators but a large reduction in variance</li>
-<li>More continuous and dont suffer from high variability</li>
-<li>Ridge Regression
-<ul>
-<li>Impose a penalty the size of the coefficicents</li>
-<li><span class="math inline">\(\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) + \lambda \sum \beta^2\)</span></li>
-<li><span class="math inline">\(\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) \; \text{subject to} \sum \beta^2 \le t\)</span></li>
-<li>t is the budget</li>
-<li>In case of correlated variables, coefficcients are poorly determined</li>
-<li>A large positive coefficient of a variable is canceled by a large negative coefficient of the correlated variable</li>
-<li>Solution not invariant to scaling. Standardize the inputs and don’t impose penalty on intercept</li>
-<li><span class="math inline">\(\hat \beta^{\text{ridge}} = (X^T X + \lambda I)^{-1}(X^Ty)\)</span></li>
-<li>In case of correlated predictors, the original <span class="math inline">\((X^T X)\)</span> wasn’t full rank. But by adding noise to diagonal elements, the matrix can now be inverted.</li>
-<li>In case of orthonormal inputs (PCA), the ridge coefficicents are scaled versions of the original least-square estimates.</li>
-<li><span class="math inline">\(\lambda\)</span> controls the degrees of freedom. A large value results in effectively dropping the variables.</li>
-</ul></li>
-<li>Lasso Regression
-<ul>
-<li><span class="math inline">\(\hat \beta^{\text{ridge}} = \arg \min (y - X \beta)^T(y - X \beta) + \lambda \sum |\beta|\)</span></li>
-<li>Non-linear optimization</li>
-<li>A heavy restriction on budget makes some coefficients exactly zero</li>
-<li>Continuous subset selection</li>
-<li>Comparison between Ridge and Laso
-<ul>
-<li>Ridge represents a disk <span class="math inline">\(\beta_1^2 + \beta_2^2 &lt;= t\)</span></li>
-<li>Lasso represents a rhombus <span class="math inline">\(|\beta_1| + |\beta_2| &lt;= t\)</span></li>
-<li>At optimal value, the estimated parameters can be exactly zero (corner solutions)</li>
-<li>Bayesian MAP estimates with different priors
-<ul>
-<li>Lasso has Laplace Prior</li>
-<li>Ridge has Gaussian Prior</li>
-</ul></li>
-</ul></li>
-<li>Elastic Net
-<ul>
-<li><span class="math inline">\(\lambda \sum \alpha \beta^2 + (1 - \alpha) |\beta|\)</span></li>
-<li>Variable selection like Lasso</li>
-<li>Shinking coefficients like Ridge</li>
+<li><span class="math inline">\(P(M1 |D) / P(M2 |D) = P(M1) / P(M2) + P(D | M1) / P(D | M2)\)</span></li>
+<li>The first term is constant (non-informative priors)</li>
+<li>The second term the Bayes Factor</li>
 </ul></li>
 </ul></li>
 </ul>
 </div>
-<div id="partial-least-squares" class="section level3 hasAnchor" number="2.0.7">
-<h3><span class="header-section-number">2.0.7</span> Partial Least Squares<a href="linear-methods-for-regression.html#partial-least-squares" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="vc-dimension" class="section level3 hasAnchor" number="5.0.5">
+<h3><span class="header-section-number">5.0.5</span> VC Dimension<a href="model-selection.html#vc-dimension" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>Alternative approach to PCA deal with correlated features</li>
-<li>Supervised transformation</li>
-<li>Principal component regression seeks directions that have high variance</li>
-<li>Partial Least Square seeks direction with high variance and high correlation with response</li>
-<li>Derive new features by linear combination of raw variables re-weighted by the correlation</li>
+<li>AIC, C-p statistic need the information on model complexity
+<ul>
+<li>Effective number of parameters</li>
+</ul></li>
+<li>Difficult to estimate for non-linear models</li>
+<li>VC Dimension is Generalized Model Complexity of a class of functions
+<ul>
+<li>How “wiggly” can the memeber of this class be?</li>
+</ul></li>
+<li>Shattering
+<ul>
+<li>Points that can be perfectly separated by a class of functions, no matter how the binary labels are assigned</li>
+</ul></li>
+<li>VC Dimension: Largest number of points that can be shattered by members of class of functions</li>
+<li>3 points in case of linear classifier in a plane
+<ul>
+<li>4 points can lead to XOR</li>
+</ul></li>
+</ul>
+</div>
+<div id="cross-validation" class="section level3 hasAnchor" number="5.0.6">
+<h3><span class="header-section-number">5.0.6</span> Cross Validation<a href="model-selection.html#cross-validation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Estimation for <span class="math inline">\(\text{ERR}_T\)</span></li>
+<li>Data scarce situation</li>
+<li>Divide data into K equal parts
+<ul>
+<li>Indexing function: <span class="math inline">\(\kappa : \{1,2,....N\} \rightarrow \{1, 2 ... K\}\)</span></li>
+</ul></li>
+<li>Fit model on K-1 parts and predict on Kth part</li>
+<li>Cross Validaiton Error
+<ul>
+<li><span class="math inline">\(CV(f) = {1 \over N}\sum L(y_i, \hat y_i^{f_{-\kappa}})\)</span></li>
+</ul></li>
+<li>5-fold, 10-fold cross validation is recommended</li>
+</ul>
+</div>
+<div id="boostrap-methods" class="section level3 hasAnchor" number="5.0.7">
+<h3><span class="header-section-number">5.0.7</span> Boostrap Methods<a href="model-selection.html#boostrap-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Estimation for <span class="math inline">\(\text{ERR}\)</span></li>
+<li>Randomly draw datasets from training data by sampling with replacement
+<ul>
+<li>Each dataset has the same size of original training data</li>
+</ul></li>
+<li>Fit the model on each of the bootstrap datasets</li>
+<li><span class="math inline">\(\text{ERR}_{\text{boot}} = {1 \over B}{1 \over N} \sum_B \sum_N L(y, \hat y)\)</span></li>
+<li>Bootstrap uses overlapping samples across model fits (unlike cross validation)
+<ul>
+<li><span class="math inline">\(P(i \in B) = 1 - (1 - {1 \over N})^N \approx 1 - e^{-1}\)</span></li>
+</ul></li>
+<li><span class="math inline">\(\text{ERR}_{\text{boot}}\)</span> isn’t a good estimator becuase of leakage</li>
+<li>Use Out-of-bag error instead
+<ul>
+<li>Samples which have been dropped by boostrap</li>
+</ul></li>
 </ul>
 
 </div>
@@ -273,8 +349,8 @@
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="linear-methods-for-classification.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="kernel-methods.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

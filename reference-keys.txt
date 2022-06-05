@@ -21,3 +21,11 @@ kernel-desnity-classification
 naive-bayes-classifier
 radial-basis-functions
 mixture-models
+model-selection
+bias-variance-tradeoff
+bias-variance-decomposition
+optimism-of-training-error
+in-sample-prediciton-error
+vc-dimension
+cross-validation
+boostrap-methods
