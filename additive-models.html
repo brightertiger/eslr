@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5 Model Selection | ESLR Notes</title>
-  <meta name="description" content="5 Model Selection | ESLR Notes" />
+  <title>7 Additive Models | ESLR Notes</title>
+  <meta name="description" content="7 Additive Models | ESLR Notes" />
   <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5 Model Selection | ESLR Notes" />
+  <meta property="og:title" content="7 Additive Models | ESLR Notes" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5 Model Selection | ESLR Notes" />
+  <meta name="twitter:title" content="7 Additive Models | ESLR Notes" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="kernel-methods.html"/>
-<link rel="next" href="model-selection-1.html"/>
+<link rel="prev" href="model-selection-1.html"/>
+<link rel="next" href="random-forests.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -144,223 +144,155 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="model-selection" class="section level1 hasAnchor" number="5">
-<h1><span class="header-section-number">5</span> Model Selection<a href="model-selection.html#model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="bias-variance-tradeoff" class="section level3 hasAnchor" number="5.0.1">
-<h3><span class="header-section-number">5.0.1</span> Bias-Variance Tradeoff<a href="model-selection.html#bias-variance-tradeoff" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="additive-models" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">7</span> Additive Models<a href="additive-models.html#additive-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="generalized-additive-models" class="section level3 hasAnchor" number="7.0.1">
+<h3><span class="header-section-number">7.0.1</span> Generalized Additive Models<a href="additive-models.html#generalized-additive-models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>Generalization
+<li>Linear models fail to capture non-linear trends</li>
+<li>Additive models an alternative
 <ul>
-<li>Prediction error over an independent test sample</li>
-</ul></li>
-<li><span class="math inline">\(\text{ERR}_T = E(L(Y, \hat f(x)) | T)\)</span>
+<li><span class="math inline">\(g[\mu(X)] = \alpha + f(X_1) + f(X_2)....\)</span></li>
+<li><span class="math inline">\(f(x)\)</span> are non-parametric smoothing functions (say cubic splines)</li>
+<li><span class="math inline">\(\mu(x)\)</span> is the conditional mean</li>
+<li><span class="math inline">\(g(x)\)</span> is the link functions
 <ul>
-<li>T refers to the training set used to build the model</li>
-<li>L is the loss function used to evaluate the model performance
-<ul>
-<li>Regression: Squared Loss, Absolute Loss</li>
-<li>Classification: 0-1 Loss, Deviance (-2 x LL)</li>
-</ul></li>
-</ul></li>
-<li>As the model becomes more complex, it adaps to complex underlying structure of the training data
-<ul>
-<li>Decrease in bias but increase in variance</li>
-<li>If the underlying training data changes, the complex fitted model will change to a large extent</li>
-</ul></li>
-<li>Intermediate model complexity that gives minimum expected test error</li>
-<li>Training error is not a good estimate of test error
-<ul>
-<li>Consistently decreases with increasing model complexity</li>
-<li>Poor generalization</li>
-</ul></li>
-<li>Model Selection
-<ul>
-<li>Estimating Performance of different models to choose the best one</li>
-</ul></li>
-<li>Model Assessment
-<ul>
-<li>Having selected the model, estimating the generalization error on new, unseen data<br />
+<li>identity, logit, log-linear etc.<br />
 </li>
 </ul></li>
-<li>Divide the dataset
+</ul></li>
+<li>Estimation using Penalized Sum Squares (PRSS)</li>
+<li>The coefficients of the regression are replaced with a flexible function (say spline)
 <ul>
-<li>Training: Fit the models</li>
-<li>Validaiton: Estimate model prediction error for model selection</li>
-<li>Test: Generalizaiton error of the final chosen model</li>
+<li>Allows for modeling non-linear relationships</li>
 </ul></li>
 </ul>
 </div>
-<div id="bias-variance-decomposition" class="section level3 hasAnchor" number="5.0.2">
-<h3><span class="header-section-number">5.0.2</span> Bias-Variance Decomposition<a href="model-selection.html#bias-variance-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="tree-based-methods" class="section level3 hasAnchor" number="7.0.2">
+<h3><span class="header-section-number">7.0.2</span> Tree-based Methods<a href="additive-models.html#tree-based-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(Y = f(X) + \epsilon\)</span>
+<li>Partition the feature space into rectangels and fit a simple model in each partition</li>
+<li>Regression Setting</li>
+<li><span class="math inline">\(f(X) = \sum c_i I\{X \in R_i\}\)</span></li>
+<li><span class="math inline">\(c_m = ave(y_i | X_i \in R_m)\)</span></li>
+<li>Greedy Algorithms to find best splits
 <ul>
-<li><span class="math inline">\(E(\epsilon) = 0, V(\epsilon) = \sigma^2_{\epsilon}\)</span></li>
+<li><span class="math inline">\(R_1 = \{X | X_j \le s\}; \; R_2 = \{X | X_j &gt; s\}\)</span><br />
+</li>
+<li><span class="math inline">\(\min_{j,s} \min \sum (y_i - c_i)^2 I\{X \in R_i\}\)</span></li>
 </ul></li>
-<li><span class="math inline">\(\text{ERR}(x_0) = E((Y - \hat f(x_0))^2 | x_0)\)</span>
+<li>Tree size is a hyperparameter</li>
+<li>Pruning
 <ul>
-<li><span class="math inline">\(\text{ERR}(x_0) = E((f(x_0) + \epsilon - \hat f(x_0))^2)\)</span></li>
-<li><span class="math inline">\(\text{ERR}(x_0) = \sigma^2_{\epsilon} + [E(\hat f(x_0) - f(x_0))]^2 + E[\hat f(x_0) - E(\hat f(x_0)]^2\)</span></li>
-<li>MSE = Irreducible Error + Bias Squared + Variance</li>
+<li>Option-1
+<ul>
+<li>Split only if delta is greater than some threshold</li>
+<li>Short Sighted, the node may lead to a better split down the line<br />
+</li>
 </ul></li>
-<li>Bias: Difference between average of estimate and true mean</li>
-<li>Variance: Squared Deviation of model around its mean</li>
-<li>More Complex Model
+<li>Option 2
 <ul>
-<li>Lower Bias</li>
-<li>Higher Variance</li>
-</ul></li>
-<li>For linear Model
-<ul>
-<li><span class="math inline">\(\text{Variance} \propto p\)</span>
-<ul>
-<li>Complexity of the model is related to the number of parameters</li>
-</ul></li>
-<li><span class="math inline">\(\text{Bias}^2 = \text{Model Bias}^2 + \text{Estimation Bias}^2\)</span>
-<ul>
-<li>Model Bias: Best fitting linar model and True function</li>
-<li>Estimation Bias: Estimated Model and Best fitting linar model</li>
-</ul></li>
-<li>For OLS: Estimation Bias is 0, BLUE</li>
-<li>For Ridge: Estimation Bias is positive
-<ul>
-<li>Trade-off with reduction in variance</li>
+<li>Grow the tree to full saize (say depth 5)</li>
+<li><span class="math inline">\(N_m\)</span> # of observations in m’th node</li>
+<li><span class="math inline">\(C_m = \sum y_i / N_m\)</span></li>
+<li><span class="math inline">\(Q_m = {1 \over N_m }\sum (y_i - C_m)^2\)</span></li>
+<li>Cost-Complexity Pruning</li>
+<li><span class="math inline">\(C = \sum_T N_m Q_m(T) + \alpha |T|\)</span></li>
+<li><span class="math inline">\(\alpha\)</span> governs the trade-off, large value leads to smaller trees</li>
 </ul></li>
 </ul></li>
-</ul>
-</div>
-<div id="optimism-of-training-error" class="section level3 hasAnchor" number="5.0.3">
-<h3><span class="header-section-number">5.0.3</span> Optimism of Training Error<a href="model-selection.html#optimism-of-training-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<li>Classification Setting</li>
+<li><span class="math inline">\(p_{mk} = {1 \over N_m}\sum_{R_m} I\{y_i = k\}\)</span></li>
+<li>Splitting Criteria
 <ul>
-<li><span class="math inline">\(\text{ERR} = E(\text{ERR}_T)\)</span></li>
-<li>Training error is less than test error
+<li>Miss-classification Error: <span class="math inline">\(1 - \hat p_{mk}\)</span></li>
+<li>Gini Index: <span class="math inline">\(\sum_K p_{mk}(1 - \hat p_{mk})\)</span>
 <ul>
-<li>Same data is being used to train and evaluate the model</li>
+<li>Probability of miscalssification</li>
+<li>Variance of Binomial Distribution</li>
 </ul></li>
-<li>Optimistic estimate of generalization error
-<ul>
-<li><span class="math inline">\(\text{ERR}_{in}\)</span>:
-<ul>
-<li>Error between sample and populaiton regression function estimates on training data</li>
+<li>Cross-Entropy: <span class="math inline">\(- \sum_K p_{mk} \log (p_{mk})\)</span></li>
+<li>Gini Index and Cross Entropy more sensitive to node probabilities</li>
 </ul></li>
-<li><span class="math inline">\(\bar{\text{err}}\)</span>
+<li>Splitting categorical variable
 <ul>
-<li>Average sample regression error over training data</li>
+<li>N levels, <span class="math inline">\(2^{N-1} - 1\)</span> possible paritions</li>
+<li>Order the categories by proportion</li>
+<li>Treat the variable as continuous</li>
+</ul></li>
+<li>Missing Values
+<ul>
+<li>Create a new level within the original corresponding to missing observations</li>
+<li>Create a surrogate variable for missing values
+<ul>
+<li>Split by non-missing values</li>
+<li>Leverage the correlation between predictors and surrogates to minimize loss of information</li>
 </ul></li>
 </ul></li>
-<li>Optimisim in training error estimate
+<li>Evaluation
 <ul>
-<li><span class="math inline">\(\text{op} = \text{ERR}_{in} - \bar{\text{err}}\)</span></li>
-<li>Related to <span class="math inline">\(\text{cov}(y, \hat y)\)</span></li>
-<li>How strongly a label value affects its own prediction</li>
+<li><span class="math inline">\(L_{xy} =\)</span> Loss for predicting class x obkect as k</li>
+<li><span class="math inline">\(L_{00}, L_{11} = 0\)</span></li>
+<li><span class="math inline">\(L_{10} =\)</span> False Negative</li>
+<li><span class="math inline">\(L_{01} =\)</span> False Positive</li>
+<li>Sentitivity:
+<ul>
+<li>Prediciting disease as disease (Recall)</li>
+<li>TP / TP + FN</li>
+<li><span class="math inline">\(L_{11} / (L_{11} + L_{10})\)</span></li>
 </ul></li>
-<li>Optimism increases with number of inputs</li>
-<li>Optimism decreases with number of training samples</li>
-</ul>
-</div>
-<div id="in-sample-prediciton-error" class="section level3 hasAnchor" number="5.0.4">
-<h3><span class="header-section-number">5.0.4</span> In-sample Prediciton Error<a href="model-selection.html#in-sample-prediciton-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<li>Specificity:
 <ul>
-<li><span class="math inline">\(\text{ERR}_{in} = \bar{\text{err}} + \text{op}\)</span></li>
-<li>Cp Statistic
+<li>Predicting non-disease as non-disease
 <ul>
-<li><span class="math inline">\(C_p = \bar{\text{err}} + 2{p \over N} \sigma^2_{\epsilon}\)</span></li>
-<li>p is the effective number of parameters</li>
+<li>TN / TN + FP</li>
+<li><span class="math inline">\(L_{00} / (L_{00} + L_{01})\)</span><br />
+</li>
 </ul></li>
-<li>AIC
-<ul>
-<li><span class="math inline">\(\text{AIC} = {-2 \over N} LL + 2{p \over N}\)</span></li>
-<li>p is the effective number of parameters</li>
-<li>For model selection, choose the one with lowest AIC</li>
 </ul></li>
-<li>Effective Number of Parameters
+<li>AUC-ROC
 <ul>
-<li>Linear Regression: <span class="math inline">\(\hat y = ((X&#39;X)^{-1}X&#39;)y\)</span></li>
-<li>Ridge Regression: <span class="math inline">\(\hat y = (((X&#39;X)^{-1} + \lambda I)X&#39;)y\)</span></li>
-<li>Generalized Form: <span class="math inline">\(\hat y = S y\)</span></li>
-<li>p is the trace of the S Matrix</li>
+<li>How Sentitivity (y) and Specificty (x) vary with thresholds</li>
+<li>Area under ROC Curve is the C-statistic</li>
+<li>Equivalent to Mann-Whitney U Test, Wilcoxin rank-sum test</li>
+<li>Median Difference in prediction scores for two groups</li>
 </ul></li>
-<li>BIC
-<ul>
-<li><span class="math inline">\(\text{BIC} = {-2 \over N} LL + \log N \times p\)</span></li>
-<li>Penalizes complex models more heavily compared to AIC</li>
-<li>Bayesian Approach
-<ul>
-<li><span class="math inline">\(P(M |D) \propto P(D |M) P(M)\)</span></li>
 </ul></li>
-<li>Laplace Approximation
+<li>MARS
 <ul>
-<li><span class="math inline">\(\log P(D |M) = \log P(D |M, \theta) - p \log N\)</span></li>
-<li><span class="math inline">\(\log P(D |M, \theta)\)</span> is the MLE objective function</li>
-</ul></li>
-<li>Compare two models
-<ul>
-<li><span class="math inline">\(P(M1 |D) / P(M2 |D) = P(M1) / P(M2) + P(D | M1) / P(D | M2)\)</span></li>
-<li>The first term is constant (non-informative priors)</li>
-<li>The second term the Bayes Factor</li>
-</ul></li>
+<li>High dimension regression</li>
+<li>Piece-wise Linear basis Functions</li>
+<li>Analogous to deision tree splits</li>
+<li>Can handle interactions</li>
 </ul></li>
 </ul>
 </div>
-<div id="vc-dimension" class="section level3 hasAnchor" number="5.0.5">
-<h3><span class="header-section-number">5.0.5</span> VC Dimension<a href="model-selection.html#vc-dimension" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="prim" class="section level3 hasAnchor" number="7.0.3">
+<h3><span class="header-section-number">7.0.3</span> PRIM<a href="additive-models.html#prim" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>AIC, C-p statistic need the information on model complexity
+<li>Patient Rule Induction Method</li>
+<li>Boxes with high response rates</li>
+<li>Non-tree partitioning structure</li>
+<li>Start with a large box and
 <ul>
-<li>Effective number of parameters</li>
+<li>Peeling: compress the side that gives the largest mean</li>
+<li>Pasting: expand the bix dimensions that gives the largest mean</li>
 </ul></li>
-<li>Difficult to estimate for non-linear models</li>
-<li>VC Dimension is Generalized Model Complexity of a class of functions
-<ul>
-<li>How “wiggly” can the memeber of this class be?</li>
-</ul></li>
-<li>Shattering
-<ul>
-<li>Points that can be perfectly separated by a class of functions, no matter how the binary labels are assigned</li>
-</ul></li>
-<li>VC Dimension: Largest number of points that can be shattered by members of class of functions</li>
-<li>3 points in case of linear classifier in a plane
-<ul>
-<li>4 points can lead to XOR</li>
-</ul></li>
+<li>CART fragments the data quickly via binary splits</li>
+<li>PRIM is more “patient”</li>
 </ul>
 </div>
-<div id="cross-validation" class="section level3 hasAnchor" number="5.0.6">
-<h3><span class="header-section-number">5.0.6</span> Cross Validation<a href="model-selection.html#cross-validation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="mixture-of-experts" class="section level3 hasAnchor" number="7.0.4">
+<h3><span class="header-section-number">7.0.4</span> Mixture of Experts<a href="additive-models.html#mixture-of-experts" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>Estimation for <span class="math inline">\(\text{ERR}_T\)</span></li>
-<li>Data scarce situation</li>
-<li>Divide data into K equal parts
+<li>Tree splits are not hard decisions but soft probabilities</li>
+<li>Terminal nodes are called experts
 <ul>
-<li>Indexing function: <span class="math inline">\(\kappa : \{1,2,....N\} \rightarrow \{1, 2 ... K\}\)</span></li>
+<li>A linear model is fit in each terminal node</li>
 </ul></li>
-<li>Fit model on K-1 parts and predict on Kth part</li>
-<li>Cross Validaiton Error
-<ul>
-<li><span class="math inline">\(CV(f) = {1 \over N}\sum L(y_i, \hat y_i^{f_{-\kappa}})\)</span></li>
-</ul></li>
-<li>5-fold, 10-fold cross validation is recommended</li>
-</ul>
-</div>
-<div id="boostrap-methods" class="section level3 hasAnchor" number="5.0.7">
-<h3><span class="header-section-number">5.0.7</span> Boostrap Methods<a href="model-selection.html#boostrap-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>Estimation for <span class="math inline">\(\text{ERR}\)</span></li>
-<li>Randomly draw datasets from training data by sampling with replacement
-<ul>
-<li>Each dataset has the same size of original training data</li>
-</ul></li>
-<li>Fit the model on each of the bootstrap datasets</li>
-<li><span class="math inline">\(\text{ERR}_{\text{boot}} = {1 \over B}{1 \over N} \sum_B \sum_N L(y, \hat y)\)</span></li>
-<li>Bootstrap uses overlapping samples across model fits (unlike cross validation)
-<ul>
-<li><span class="math inline">\(P(i \in B) = 1 - (1 - {1 \over N})^N \approx 1 - e^{-1}\)</span></li>
-</ul></li>
-<li><span class="math inline">\(\text{ERR}_{\text{boot}}\)</span> isn’t a good estimator becuase of leakage</li>
-<li>Use Out-of-bag error instead
-<ul>
-<li>Samples which have been dropped by boostrap</li>
-</ul></li>
+<li>Non-terminal nodes are called gating networks</li>
+<li>The decision of experts is combined by gating networks</li>
+<li>Estimation via EM Algorithm</li>
 </ul>
 
 </div>
@@ -370,8 +302,8 @@
           </div>
         </div>
       </div>
-<a href="kernel-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="model-selection-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-selection-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="random-forests.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5 Model Selection | ESLR Notes</title>
-  <meta name="description" content="5 Model Selection | ESLR Notes" />
+  <title>8 Random Forests | ESLR Notes</title>
+  <meta name="description" content="8 Random Forests | ESLR Notes" />
   <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5 Model Selection | ESLR Notes" />
+  <meta property="og:title" content="8 Random Forests | ESLR Notes" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5 Model Selection | ESLR Notes" />
+  <meta name="twitter:title" content="8 Random Forests | ESLR Notes" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="kernel-methods.html"/>
-<link rel="next" href="model-selection-1.html"/>
+<link rel="prev" href="additive-models.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -144,223 +144,59 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="model-selection" class="section level1 hasAnchor" number="5">
-<h1><span class="header-section-number">5</span> Model Selection<a href="model-selection.html#model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="bias-variance-tradeoff" class="section level3 hasAnchor" number="5.0.1">
-<h3><span class="header-section-number">5.0.1</span> Bias-Variance Tradeoff<a href="model-selection.html#bias-variance-tradeoff" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="random-forests" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">8</span> Random Forests<a href="random-forests.html#random-forests" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="overview" class="section level3 hasAnchor" number="8.0.1">
+<h3><span class="header-section-number">8.0.1</span> Overview<a href="random-forests.html#overview" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>Generalization
+<li>Decision trees have low bias and high variance</li>
+<li>Bagging or bootstrap aggreagation aims to reduce the variance of these classifiers
 <ul>
-<li>Prediction error over an independent test sample</li>
+<li>Average many noisy unbiased models</li>
 </ul></li>
-<li><span class="math inline">\(\text{ERR}_T = E(L(Y, \hat f(x)) | T)\)</span>
+<li>Variance of mean of B random variables (say prediciton form trees)
 <ul>
-<li>T refers to the training set used to build the model</li>
-<li>L is the loss function used to evaluate the model performance
-<ul>
-<li>Regression: Squared Loss, Absolute Loss</li>
-<li>Classification: 0-1 Loss, Deviance (-2 x LL)</li>
+<li>Individual Variance: <span class="math inline">\(\sigma^2\)</span></li>
+<li>Pairwise Correlation: <span class="math inline">\(\rho\)</span></li>
+<li><span class="math inline">\(\rho \sigma^2 + {(1 - \rho) \over B} \sigma^2\)</span></li>
+<li>Increase in B, cannot cause the forest to overfit.</li>
 </ul></li>
-</ul></li>
-<li>As the model becomes more complex, it adaps to complex underlying structure of the training data
+<li>For gains, reduce the correlation between trees
 <ul>
-<li>Decrease in bias but increase in variance</li>
-<li>If the underlying training data changes, the complex fitted model will change to a large extent</li>
+<li>Random feature subset selection</li>
+<li>Boostrap Sampling</li>
 </ul></li>
-<li>Intermediate model complexity that gives minimum expected test error</li>
-<li>Training error is not a good estimate of test error
+<li>OOB Error
 <ul>
-<li>Consistently decreases with increasing model complexity</li>
-<li>Poor generalization</li>
-</ul></li>
-<li>Model Selection
-<ul>
-<li>Estimating Performance of different models to choose the best one</li>
-</ul></li>
-<li>Model Assessment
-<ul>
-<li>Having selected the model, estimating the generalization error on new, unseen data<br />
-</li>
-</ul></li>
-<li>Divide the dataset
-<ul>
-<li>Training: Fit the models</li>
-<li>Validaiton: Estimate model prediction error for model selection</li>
-<li>Test: Generalizaiton error of the final chosen model</li>
+<li>Errors on observations not selected in Bootstrap Sampling</li>
+<li>Identical to CV error</li>
 </ul></li>
 </ul>
 </div>
-<div id="bias-variance-decomposition" class="section level3 hasAnchor" number="5.0.2">
-<h3><span class="header-section-number">5.0.2</span> Bias-Variance Decomposition<a href="model-selection.html#bias-variance-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="variable-importance" class="section level3 hasAnchor" number="8.0.2">
+<h3><span class="header-section-number">8.0.2</span> Variable Importance<a href="random-forests.html#variable-importance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(Y = f(X) + \epsilon\)</span>
+<li>At each split:
 <ul>
-<li><span class="math inline">\(E(\epsilon) = 0, V(\epsilon) = \sigma^2_{\epsilon}\)</span></li>
+<li>Calculate the improvement in the criterion</li>
+<li>Attribute it to the splitting variable</li>
+<li>Accumatlate over all the trees and splits</li>
 </ul></li>
-<li><span class="math inline">\(\text{ERR}(x_0) = E((Y - \hat f(x_0))^2 | x_0)\)</span>
+<li>Using OOB Sample, Permutation accuracy
 <ul>
-<li><span class="math inline">\(\text{ERR}(x_0) = E((f(x_0) + \epsilon - \hat f(x_0))^2)\)</span></li>
-<li><span class="math inline">\(\text{ERR}(x_0) = \sigma^2_{\epsilon} + [E(\hat f(x_0) - f(x_0))]^2 + E[\hat f(x_0) - E(\hat f(x_0)]^2\)</span></li>
-<li>MSE = Irreducible Error + Bias Squared + Variance</li>
-</ul></li>
-<li>Bias: Difference between average of estimate and true mean</li>
-<li>Variance: Squared Deviation of model around its mean</li>
-<li>More Complex Model
-<ul>
-<li>Lower Bias</li>
-<li>Higher Variance</li>
-</ul></li>
-<li>For linear Model
-<ul>
-<li><span class="math inline">\(\text{Variance} \propto p\)</span>
-<ul>
-<li>Complexity of the model is related to the number of parameters</li>
-</ul></li>
-<li><span class="math inline">\(\text{Bias}^2 = \text{Model Bias}^2 + \text{Estimation Bias}^2\)</span>
-<ul>
-<li>Model Bias: Best fitting linar model and True function</li>
-<li>Estimation Bias: Estimated Model and Best fitting linar model</li>
-</ul></li>
-<li>For OLS: Estimation Bias is 0, BLUE</li>
-<li>For Ridge: Estimation Bias is positive
-<ul>
-<li>Trade-off with reduction in variance</li>
-</ul></li>
+<li>Pass down OBB samples for a tree, calculate accuracy</li>
+<li>Shuffle the variable j</li>
+<li>Re-calculate accuracy</li>
+<li>Average the difference over all the trees</li>
 </ul></li>
 </ul>
 </div>
-<div id="optimism-of-training-error" class="section level3 hasAnchor" number="5.0.3">
-<h3><span class="header-section-number">5.0.3</span> Optimism of Training Error<a href="model-selection.html#optimism-of-training-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="proximity-plots" class="section level3 hasAnchor" number="8.0.3">
+<h3><span class="header-section-number">8.0.3</span> Proximity Plots<a href="random-forests.html#proximity-plots" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(\text{ERR} = E(\text{ERR}_T)\)</span></li>
-<li>Training error is less than test error
-<ul>
-<li>Same data is being used to train and evaluate the model</li>
-</ul></li>
-<li>Optimistic estimate of generalization error
-<ul>
-<li><span class="math inline">\(\text{ERR}_{in}\)</span>:
-<ul>
-<li>Error between sample and populaiton regression function estimates on training data</li>
-</ul></li>
-<li><span class="math inline">\(\bar{\text{err}}\)</span>
-<ul>
-<li>Average sample regression error over training data</li>
-</ul></li>
-</ul></li>
-<li>Optimisim in training error estimate
-<ul>
-<li><span class="math inline">\(\text{op} = \text{ERR}_{in} - \bar{\text{err}}\)</span></li>
-<li>Related to <span class="math inline">\(\text{cov}(y, \hat y)\)</span></li>
-<li>How strongly a label value affects its own prediction</li>
-</ul></li>
-<li>Optimism increases with number of inputs</li>
-<li>Optimism decreases with number of training samples</li>
-</ul>
-</div>
-<div id="in-sample-prediciton-error" class="section level3 hasAnchor" number="5.0.4">
-<h3><span class="header-section-number">5.0.4</span> In-sample Prediciton Error<a href="model-selection.html#in-sample-prediciton-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li><span class="math inline">\(\text{ERR}_{in} = \bar{\text{err}} + \text{op}\)</span></li>
-<li>Cp Statistic
-<ul>
-<li><span class="math inline">\(C_p = \bar{\text{err}} + 2{p \over N} \sigma^2_{\epsilon}\)</span></li>
-<li>p is the effective number of parameters</li>
-</ul></li>
-<li>AIC
-<ul>
-<li><span class="math inline">\(\text{AIC} = {-2 \over N} LL + 2{p \over N}\)</span></li>
-<li>p is the effective number of parameters</li>
-<li>For model selection, choose the one with lowest AIC</li>
-</ul></li>
-<li>Effective Number of Parameters
-<ul>
-<li>Linear Regression: <span class="math inline">\(\hat y = ((X&#39;X)^{-1}X&#39;)y\)</span></li>
-<li>Ridge Regression: <span class="math inline">\(\hat y = (((X&#39;X)^{-1} + \lambda I)X&#39;)y\)</span></li>
-<li>Generalized Form: <span class="math inline">\(\hat y = S y\)</span></li>
-<li>p is the trace of the S Matrix</li>
-</ul></li>
-<li>BIC
-<ul>
-<li><span class="math inline">\(\text{BIC} = {-2 \over N} LL + \log N \times p\)</span></li>
-<li>Penalizes complex models more heavily compared to AIC</li>
-<li>Bayesian Approach
-<ul>
-<li><span class="math inline">\(P(M |D) \propto P(D |M) P(M)\)</span></li>
-</ul></li>
-<li>Laplace Approximation
-<ul>
-<li><span class="math inline">\(\log P(D |M) = \log P(D |M, \theta) - p \log N\)</span></li>
-<li><span class="math inline">\(\log P(D |M, \theta)\)</span> is the MLE objective function</li>
-</ul></li>
-<li>Compare two models
-<ul>
-<li><span class="math inline">\(P(M1 |D) / P(M2 |D) = P(M1) / P(M2) + P(D | M1) / P(D | M2)\)</span></li>
-<li>The first term is constant (non-informative priors)</li>
-<li>The second term the Bayes Factor</li>
-</ul></li>
-</ul></li>
-</ul>
-</div>
-<div id="vc-dimension" class="section level3 hasAnchor" number="5.0.5">
-<h3><span class="header-section-number">5.0.5</span> VC Dimension<a href="model-selection.html#vc-dimension" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>AIC, C-p statistic need the information on model complexity
-<ul>
-<li>Effective number of parameters</li>
-</ul></li>
-<li>Difficult to estimate for non-linear models</li>
-<li>VC Dimension is Generalized Model Complexity of a class of functions
-<ul>
-<li>How “wiggly” can the memeber of this class be?</li>
-</ul></li>
-<li>Shattering
-<ul>
-<li>Points that can be perfectly separated by a class of functions, no matter how the binary labels are assigned</li>
-</ul></li>
-<li>VC Dimension: Largest number of points that can be shattered by members of class of functions</li>
-<li>3 points in case of linear classifier in a plane
-<ul>
-<li>4 points can lead to XOR</li>
-</ul></li>
-</ul>
-</div>
-<div id="cross-validation" class="section level3 hasAnchor" number="5.0.6">
-<h3><span class="header-section-number">5.0.6</span> Cross Validation<a href="model-selection.html#cross-validation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>Estimation for <span class="math inline">\(\text{ERR}_T\)</span></li>
-<li>Data scarce situation</li>
-<li>Divide data into K equal parts
-<ul>
-<li>Indexing function: <span class="math inline">\(\kappa : \{1,2,....N\} \rightarrow \{1, 2 ... K\}\)</span></li>
-</ul></li>
-<li>Fit model on K-1 parts and predict on Kth part</li>
-<li>Cross Validaiton Error
-<ul>
-<li><span class="math inline">\(CV(f) = {1 \over N}\sum L(y_i, \hat y_i^{f_{-\kappa}})\)</span></li>
-</ul></li>
-<li>5-fold, 10-fold cross validation is recommended</li>
-</ul>
-</div>
-<div id="boostrap-methods" class="section level3 hasAnchor" number="5.0.7">
-<h3><span class="header-section-number">5.0.7</span> Boostrap Methods<a href="model-selection.html#boostrap-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>Estimation for <span class="math inline">\(\text{ERR}\)</span></li>
-<li>Randomly draw datasets from training data by sampling with replacement
-<ul>
-<li>Each dataset has the same size of original training data</li>
-</ul></li>
-<li>Fit the model on each of the bootstrap datasets</li>
-<li><span class="math inline">\(\text{ERR}_{\text{boot}} = {1 \over B}{1 \over N} \sum_B \sum_N L(y, \hat y)\)</span></li>
-<li>Bootstrap uses overlapping samples across model fits (unlike cross validation)
-<ul>
-<li><span class="math inline">\(P(i \in B) = 1 - (1 - {1 \over N})^N \approx 1 - e^{-1}\)</span></li>
-</ul></li>
-<li><span class="math inline">\(\text{ERR}_{\text{boot}}\)</span> isn’t a good estimator becuase of leakage</li>
-<li>Use Out-of-bag error instead
-<ul>
-<li>Samples which have been dropped by boostrap</li>
-</ul></li>
+<li>NxN Proximity matrix</li>
+<li>Count of pairs of OOB observations that share the terminal nodes</li>
+<li>Multi-dimensional scaling (optional)</li>
 </ul>
 
 </div>
@@ -370,8 +206,8 @@
           </div>
         </div>
       </div>
-<a href="kernel-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="model-selection-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="additive-models.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

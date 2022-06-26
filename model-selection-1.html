@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5 Model Selection | ESLR Notes</title>
-  <meta name="description" content="5 Model Selection | ESLR Notes" />
+  <title>6 Model Selection | ESLR Notes</title>
+  <meta name="description" content="6 Model Selection | ESLR Notes" />
   <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5 Model Selection | ESLR Notes" />
+  <meta property="og:title" content="6 Model Selection | ESLR Notes" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5 Model Selection | ESLR Notes" />
+  <meta name="twitter:title" content="6 Model Selection | ESLR Notes" />
   
   
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="kernel-methods.html"/>
-<link rel="next" href="model-selection-1.html"/>
+<link rel="prev" href="model-selection.html"/>
+<link rel="next" href="additive-models.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -144,222 +144,185 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="model-selection" class="section level1 hasAnchor" number="5">
-<h1><span class="header-section-number">5</span> Model Selection<a href="model-selection.html#model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="bias-variance-tradeoff" class="section level3 hasAnchor" number="5.0.1">
-<h3><span class="header-section-number">5.0.1</span> Bias-Variance Tradeoff<a href="model-selection.html#bias-variance-tradeoff" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="model-selection-1" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Model Selection<a href="model-selection-1.html#model-selection-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="maximum-likelihood" class="section level3 hasAnchor" number="6.0.1">
+<h3><span class="header-section-number">6.0.1</span> Maximum Likelihood<a href="model-selection-1.html#maximum-likelihood" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>Generalization
+<li>Maximum Likelihood Inference
 <ul>
-<li>Prediction error over an independent test sample</li>
+<li>Parametric Model
+<ul>
+<li>Random variable $ z_i g_(z)$</li>
+<li>Unknown Parameters <span class="math inline">\(\theta = (\mu, \sigma^2)\)</span></li>
 </ul></li>
-<li><span class="math inline">\(\text{ERR}_T = E(L(Y, \hat f(x)) | T)\)</span>
+<li>Likelihood Function
 <ul>
-<li>T refers to the training set used to build the model</li>
-<li>L is the loss function used to evaluate the model performance
-<ul>
-<li>Regression: Squared Loss, Absolute Loss</li>
-<li>Classification: 0-1 Loss, Deviance (-2 x LL)</li>
+<li><span class="math inline">\(L(\theta, Z) = \prod g_\theta(z_i)\)</span></li>
+<li>Probability of observed data under the model <span class="math inline">\(g_\theta\)</span></li>
 </ul></li>
-</ul></li>
-<li>As the model becomes more complex, it adaps to complex underlying structure of the training data
+<li>Maximize the Likelihood function
 <ul>
-<li>Decrease in bias but increase in variance</li>
-<li>If the underlying training data changes, the complex fitted model will change to a large extent</li>
+<li>Select the parameters <span class="math inline">\(\theta\)</span> such that the probability of observed data is maximized under the model</li>
 </ul></li>
-<li>Intermediate model complexity that gives minimum expected test error</li>
-<li>Training error is not a good estimate of test error
-<ul>
-<li>Consistently decreases with increasing model complexity</li>
-<li>Poor generalization</li>
+<li>Score Function <span class="math inline">\(\delta L \over \delta \theta\)</span></li>
+<li>Information Matrix <span class="math inline">\(I(\theta) = \delta^2 L \over \delta \theta^2\)</span></li>
+<li>Fisher Information <span class="math inline">\(i(\theta) = I(\theta)_{\hat \theta}\)</span></li>
 </ul></li>
-<li>Model Selection
+<li>Sampling Distribution of MLE has limiting normal distribution
 <ul>
-<li>Estimating Performance of different models to choose the best one</li>
+<li><span class="math inline">\(\theta \rightarrow N(\hat \theta, I(\hat \theta)^{-1})\)</span></li>
 </ul></li>
-<li>Model Assessment
+<li>OLS estimates are equivalent to MLE estimates for Linear Regression
 <ul>
-<li>Having selected the model, estimating the generalization error on new, unseen data<br />
-</li>
-</ul></li>
-<li>Divide the dataset
-<ul>
-<li>Training: Fit the models</li>
-<li>Validaiton: Estimate model prediction error for model selection</li>
-<li>Test: Generalizaiton error of the final chosen model</li>
+<li><span class="math inline">\(\text{VAR}(\hat \beta) = \sigma^2 / S_{xx}\)</span></li>
+<li><span class="math inline">\(\text{VAR}(\hat y_i) = \sigma^2 X^* (X&#39;X^-1) X^*\)</span></li>
 </ul></li>
 </ul>
 </div>
-<div id="bias-variance-decomposition" class="section level3 hasAnchor" number="5.0.2">
-<h3><span class="header-section-number">5.0.2</span> Bias-Variance Decomposition<a href="model-selection.html#bias-variance-decomposition" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="bootstrap" class="section level3 hasAnchor" number="6.0.2">
+<h3><span class="header-section-number">6.0.2</span> Bootstrap<a href="model-selection-1.html#bootstrap" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(Y = f(X) + \epsilon\)</span>
+<li>Bootstrap assesses uncertainty by sampling from training data
 <ul>
-<li><span class="math inline">\(E(\epsilon) = 0, V(\epsilon) = \sigma^2_{\epsilon}\)</span></li>
+<li>Estimate different models using bootstrap datasets</li>
+<li>Calculate the variance of estimates for ith observation from these models</li>
 </ul></li>
-<li><span class="math inline">\(\text{ERR}(x_0) = E((Y - \hat f(x_0))^2 | x_0)\)</span>
+<li>Non-Parametric Booststrap
 <ul>
-<li><span class="math inline">\(\text{ERR}(x_0) = E((f(x_0) + \epsilon - \hat f(x_0))^2)\)</span></li>
-<li><span class="math inline">\(\text{ERR}(x_0) = \sigma^2_{\epsilon} + [E(\hat f(x_0) - f(x_0))]^2 + E[\hat f(x_0) - E(\hat f(x_0)]^2\)</span></li>
-<li>MSE = Irreducible Error + Bias Squared + Variance</li>
+<li>Uses raw data for sampling, model free</li>
 </ul></li>
-<li>Bias: Difference between average of estimate and true mean</li>
-<li>Variance: Squared Deviation of model around its mean</li>
-<li>More Complex Model
+<li>Parametric Bootstrap
 <ul>
-<li>Lower Bias</li>
-<li>Higher Variance</li>
+<li>Simulate new target variable by adding gaussian noise to predicted values from model</li>
+<li>Predictions estimated from this sampling will follow Gaussian distribution</li>
 </ul></li>
-<li>For linear Model
+<li>Computational alternative to MLE
 <ul>
-<li><span class="math inline">\(\text{Variance} \propto p\)</span>
-<ul>
-<li>Complexity of the model is related to the number of parameters</li>
+<li>No formulae are available</li>
 </ul></li>
-<li><span class="math inline">\(\text{Bias}^2 = \text{Model Bias}^2 + \text{Estimation Bias}^2\)</span>
+<li>Boostrap mean is equivalent to posterior average in Bayesian inference</li>
+<li>Bagging averages predictions over collection of bootstrap samples
 <ul>
-<li>Model Bias: Best fitting linar model and True function</li>
-<li>Estimation Bias: Estimated Model and Best fitting linar model</li>
-</ul></li>
-<li>For OLS: Estimation Bias is 0, BLUE</li>
-<li>For Ridge: Estimation Bias is positive
-<ul>
-<li>Trade-off with reduction in variance</li>
-</ul></li>
+<li>Reduces variance of estimates</li>
+<li>Bagging often descreases mean-squared error</li>
 </ul></li>
 </ul>
 </div>
-<div id="optimism-of-training-error" class="section level3 hasAnchor" number="5.0.3">
-<h3><span class="header-section-number">5.0.3</span> Optimism of Training Error<a href="model-selection.html#optimism-of-training-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="bayesian-methods" class="section level3 hasAnchor" number="6.0.3">
+<h3><span class="header-section-number">6.0.3</span> Bayesian Methods<a href="model-selection-1.html#bayesian-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(\text{ERR} = E(\text{ERR}_T)\)</span></li>
-<li>Training error is less than test error
+<li>Assume a prior distribution over unknown parameters
 <ul>
-<li>Same data is being used to train and evaluate the model</li>
+<li><span class="math inline">\(P(\theta)\)</span></li>
 </ul></li>
-<li>Optimistic estimate of generalization error
+<li>Sampling Distribution of data given the parameters
 <ul>
-<li><span class="math inline">\(\text{ERR}_{in}\)</span>:
+<li><span class="math inline">\(P(Z | \theta)\)</span></li>
+</ul></li>
+<li>Posterior Distribution
 <ul>
-<li>Error between sample and populaiton regression function estimates on training data</li>
+<li>Updated knowledge of parameters after seeing the data</li>
+<li><span class="math inline">\(P(\theta | Z) \propto P(Z | \theta) \times P(\theta)\)</span></li>
 </ul></li>
-<li><span class="math inline">\(\bar{\text{err}}\)</span>
+<li>Predictive Distribution
 <ul>
-<li>Average sample regression error over training data</li>
+<li>Predicting values of new unseen observations</li>
+<li><span class="math inline">\(P(z | Z) = \int P(z | \theta) P(\theta | Z) d\theta\)</span></li>
 </ul></li>
-</ul></li>
-<li>Optimisim in training error estimate
+<li>MAP Estimate
 <ul>
-<li><span class="math inline">\(\text{op} = \text{ERR}_{in} - \bar{\text{err}}\)</span></li>
-<li>Related to <span class="math inline">\(\text{cov}(y, \hat y)\)</span></li>
-<li>How strongly a label value affects its own prediction</li>
+<li>Maximum a Posterior, point estimate of unknown parameters</li>
+<li>Selec the parameters that maximze posterior density function</li>
+<li><span class="math inline">\(\hat \theta = \arg \max P(\theta | Z)\)</span></li>
 </ul></li>
-<li>Optimism increases with number of inputs</li>
-<li>Optimism decreases with number of training samples</li>
+<li>MAP differs from frequentist approaches (like MLE) in its use of prior distrbution
+<ul>
+<li>Prior Distribution acts as regularization</li>
+<li>MAP for linear regression for Gaussian priors yields Ridge Regression</li>
+</ul></li>
 </ul>
 </div>
-<div id="in-sample-prediciton-error" class="section level3 hasAnchor" number="5.0.4">
-<h3><span class="header-section-number">5.0.4</span> In-sample Prediciton Error<a href="model-selection.html#in-sample-prediciton-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="em-algorithm" class="section level3 hasAnchor" number="6.0.4">
+<h3><span class="header-section-number">6.0.4</span> EM Algorithm<a href="model-selection-1.html#em-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><span class="math inline">\(\text{ERR}_{in} = \bar{\text{err}} + \text{op}\)</span></li>
-<li>Cp Statistic
+<li>Simplify difficult MLE problems</li>
+<li>Bimodal Data Distribution
 <ul>
-<li><span class="math inline">\(C_p = \bar{\text{err}} + 2{p \over N} \sigma^2_{\epsilon}\)</span></li>
-<li>p is the effective number of parameters</li>
+<li><span class="math inline">\(Y_1 = \sim N(\mu_1, \sigma^2_1)\)</span></li>
+<li><span class="math inline">\(Y_2 = \sim N(\mu_2, \sigma^2_2)\)</span></li>
+<li><span class="math inline">\(Y = \Delta Y_1 + (1 - \Delta) Y_2\)</span>
+<ul>
+<li><span class="math inline">\(\Delta \in \{0,1\}\)</span></li>
+<li><span class="math inline">\(p(\Delta = 1) = \pi\)</span></li>
 </ul></li>
-<li>AIC
+<li>Density function of Y
 <ul>
-<li><span class="math inline">\(\text{AIC} = {-2 \over N} LL + 2{p \over N}\)</span></li>
-<li>p is the effective number of parameters</li>
-<li>For model selection, choose the one with lowest AIC</li>
+<li><span class="math inline">\(g_Y(y) = (1 - \pi) \phi_1(y) + \pi \phi_2(y)\)</span></li>
 </ul></li>
-<li>Effective Number of Parameters
-<ul>
-<li>Linear Regression: <span class="math inline">\(\hat y = ((X&#39;X)^{-1}X&#39;)y\)</span></li>
-<li>Ridge Regression: <span class="math inline">\(\hat y = (((X&#39;X)^{-1} + \lambda I)X&#39;)y\)</span></li>
-<li>Generalized Form: <span class="math inline">\(\hat y = S y\)</span></li>
-<li>p is the trace of the S Matrix</li>
 </ul></li>
-<li>BIC
+<li>Direct maximization of likelihood difficult
 <ul>
-<li><span class="math inline">\(\text{BIC} = {-2 \over N} LL + \log N \times p\)</span></li>
-<li>Penalizes complex models more heavily compared to AIC</li>
-<li>Bayesian Approach
-<ul>
-<li><span class="math inline">\(P(M |D) \propto P(D |M) P(M)\)</span></li>
+<li>Sum operation inside log</li>
 </ul></li>
-<li>Laplace Approximation
+<li>Responsibility
 <ul>
-<li><span class="math inline">\(\log P(D |M) = \log P(D |M, \theta) - p \log N\)</span></li>
-<li><span class="math inline">\(\log P(D |M, \theta)\)</span> is the MLE objective function</li>
+<li><span class="math inline">\(\Delta_i\)</span> is latent for a given observation</li>
+<li><span class="math inline">\(\gamma_i(\Delta | Z, \theta) = P(\Delta = 1 | Z, \theta)\)</span></li>
+<li>Soft Assignments</li>
 </ul></li>
-<li>Compare two models
+<li>EM Algorithm
 <ul>
-<li><span class="math inline">\(P(M1 |D) / P(M2 |D) = P(M1) / P(M2) + P(D | M1) / P(D | M2)\)</span></li>
-<li>The first term is constant (non-informative priors)</li>
-<li>The second term the Bayes Factor</li>
+<li>Take Initial Guesses for paramters
+<ul>
+<li>Sample Mean, Sample Variances, Proportion</li>
+</ul></li>
+<li>Expentation Step: Compute the responsibility
+<ul>
+<li><span class="math inline">\(\hat \gamma_i = \hat \pi \phi_2(y_i) / (1 - \hat \pi \phi_1(y_i) + \hat \pi \phi_2(y_i)\)</span></li>
+</ul></li>
+<li>Maximization Step: Compute the weighted means and variances, and mixing probability
+<ul>
+<li><span class="math inline">\(\mu_1 = \sum (1 - \hat \gamma_i) y_i / \sum 1 - \hat \gamma_i\)</span></li>
+<li><span class="math inline">\(\mu_2 = \sum \hat \gamma_i y_i / \sum \hat \gamma_i\)</span></li>
+<li><span class="math inline">\(\hat \pi = \sum \gamma_i / N\)</span></li>
 </ul></li>
 </ul></li>
 </ul>
 </div>
-<div id="vc-dimension" class="section level3 hasAnchor" number="5.0.5">
-<h3><span class="header-section-number">5.0.5</span> VC Dimension<a href="model-selection.html#vc-dimension" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="mcmc" class="section level3 hasAnchor" number="6.0.5">
+<h3><span class="header-section-number">6.0.5</span> MCMC<a href="model-selection-1.html#mcmc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li>AIC, C-p statistic need the information on model complexity
+<li>Given a set of random variables <span class="math inline">\(U_1, U_2, U_3...\)</span>
 <ul>
-<li>Effective number of parameters</li>
+<li>Sampling from joint distribution is difficult</li>
+<li>Sampling from conditional distribution is easy</li>
+<li>For example bayesian inference
+<ul>
+<li>Joint distribution <span class="math inline">\(P(Z, \theta)\)</span></li>
+<li>Conditional Distribution <span class="math inline">\(P(Z | \theta)\)</span></li>
 </ul></li>
-<li>Difficult to estimate for non-linear models</li>
-<li>VC Dimension is Generalized Model Complexity of a class of functions
-<ul>
-<li>How “wiggly” can the memeber of this class be?</li>
 </ul></li>
-<li>Shattering
+<li>Gibbs Sampling
 <ul>
-<li>Points that can be perfectly separated by a class of functions, no matter how the binary labels are assigned</li>
+<li>Take Some initial values of RVs <span class="math inline">\(U^0_k\)</span></li>
+<li>Draw from conditional Distribution
+<ul>
+<li><span class="math inline">\(P(U^0_1 | U^0_1, U^0_2...., U^0_K)\)</span></li>
 </ul></li>
-<li>VC Dimension: Largest number of points that can be shattered by members of class of functions</li>
-<li>3 points in case of linear classifier in a plane
-<ul>
-<li>4 points can lead to XOR</li>
+<li>Continue until the joint distribution doesn’t change</li>
+<li>Markov Chain whose stationary distribution is the true joint distribution</li>
+<li>Markov Chain Monte Carlo</li>
 </ul></li>
-</ul>
-</div>
-<div id="cross-validation" class="section level3 hasAnchor" number="5.0.6">
-<h3><span class="header-section-number">5.0.6</span> Cross Validation<a href="model-selection.html#cross-validation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<li>Gibbs Sampling is related to EM algorithm
 <ul>
-<li>Estimation for <span class="math inline">\(\text{ERR}_T\)</span></li>
-<li>Data scarce situation</li>
-<li>Divide data into K equal parts
+<li>Generate <span class="math inline">\(\Delta_i \in {0,1}\)</span> using <span class="math inline">\(p(\Delta_i = 1) = \gamma_i (\theta)\)</span></li>
+<li>Calculate the means and variances
 <ul>
-<li>Indexing function: <span class="math inline">\(\kappa : \{1,2,....N\} \rightarrow \{1, 2 ... K\}\)</span></li>
+<li><span class="math inline">\(\mu_1 = \sum (1 - \Delta_i) y_i / \sum 1 - \Delta_i\)</span></li>
+<li><span class="math inline">\(\mu_2 = \sum \Delta_i y_i / \sum \Delta_i\)</span></li>
 </ul></li>
-<li>Fit model on K-1 parts and predict on Kth part</li>
-<li>Cross Validaiton Error
-<ul>
-<li><span class="math inline">\(CV(f) = {1 \over N}\sum L(y_i, \hat y_i^{f_{-\kappa}})\)</span></li>
-</ul></li>
-<li>5-fold, 10-fold cross validation is recommended</li>
-</ul>
-</div>
-<div id="boostrap-methods" class="section level3 hasAnchor" number="5.0.7">
-<h3><span class="header-section-number">5.0.7</span> Boostrap Methods<a href="model-selection.html#boostrap-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
-<li>Estimation for <span class="math inline">\(\text{ERR}\)</span></li>
-<li>Randomly draw datasets from training data by sampling with replacement
-<ul>
-<li>Each dataset has the same size of original training data</li>
-</ul></li>
-<li>Fit the model on each of the bootstrap datasets</li>
-<li><span class="math inline">\(\text{ERR}_{\text{boot}} = {1 \over B}{1 \over N} \sum_B \sum_N L(y, \hat y)\)</span></li>
-<li>Bootstrap uses overlapping samples across model fits (unlike cross validation)
-<ul>
-<li><span class="math inline">\(P(i \in B) = 1 - (1 - {1 \over N})^N \approx 1 - e^{-1}\)</span></li>
-</ul></li>
-<li><span class="math inline">\(\text{ERR}_{\text{boot}}\)</span> isn’t a good estimator becuase of leakage</li>
-<li>Use Out-of-bag error instead
-<ul>
-<li>Samples which have been dropped by boostrap</li>
+<li>Keep repeating until the join distribution doesn’t change</li>
 </ul></li>
 </ul>
 
@@ -370,8 +333,8 @@
           </div>
         </div>
       </div>
-<a href="kernel-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="model-selection-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-selection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="additive-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
